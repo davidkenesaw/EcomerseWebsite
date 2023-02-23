@@ -5,17 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
 </head>
 <body>
     <nav class="nav">
-        <a class="" href="/LoginPage">Login</a>
+        <a class="" href="/">Home</a>
+        <a class="" href="/SignUpPage">Sign Up</a>
     </nav>
 
-    <nav class="nav">
-        <a class="" href="/">Home</a>
-        <a class="" href="/StorePage">Store</a>
-        <a class="" href="/CartPage">Cart</a>
-    </nav>
+    <form action="/Login"method='post'>
+        <input placeholder="Enter User Name" type="text" name="UserName" id="">
+        <input placeholder="Enter Password" type="text" name="Password" id="">
+        <button type="submit">Login</button>
+    </form>
+    <%= error %>
+
 </body>
 </html>
