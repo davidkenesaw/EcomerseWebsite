@@ -5,6 +5,7 @@ require('dotenv').config({
 })
 const express = require("express");
 
+const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, checknotLoggedIn, checkLoggedIn} = require('./ServerProcessing/LoginRegister')
@@ -21,6 +22,7 @@ app.use(cookieParser(process.env.SECRETE));//change this and make it secrete
 app.set('views', path.join(__dirname, '../Client/views'));//show express the views directory
 app.use(express.static(path.join(__dirname, '../Client')));//show express the Client directory
 app.use(seshOption)//configuration for express session
+app.use(upload())
 
 //get requests 
 app.get('/', checkLoggedIn,function(req,res){
@@ -68,6 +70,35 @@ app.post("/SignUp",SignUp);
 app.post("/Login",Login);
 app.post("/Authenticate",Authenticate);
 
-app.listen(process.env.PORT || 3456, function () {//host site
-    console.log("Port: 3456");
+
+
+
+
+
+//test proj
+app.get("/testFormPage",function(req,res){
+    res.render("testForm")
+})
+app.post('/testfile', function(req, res) {
+    console.log(req.files); // the uploaded file object
+    var file = req.files.sampleFile
+    var filename = file.name
+    console.log(filename);
+
+    file.mv("../Pictures/"+filename, function(err){
+        if(err){
+            res.render(err)            
+        }else{
+            res.render("testForm")
+        }
+    });
+
+});
+
+
+
+
+app.listen(process.env.PORT || 3000, function () {//host site
+    console.log("Port: 3000");
+    
 });
