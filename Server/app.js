@@ -9,6 +9,7 @@ const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, checknotLoggedIn, checkLoggedIn} = require('./ServerProcessing/LoginRegister')
+const {addProduct,displayProducts} = require('./ServerProcessing/ProductFunct')
 const {sendEmail} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 
@@ -82,35 +83,7 @@ app.get("/testFormPage",function(req,res){
     const error = ""
     res.render("testForm",{error})
 })
-app.post('/addProduct', function(req, res) {
-    const ProductName = req.body.Name;
-    const Category = req.body.Category;
-
-    const Description = req.body.Description;
-    const Cost = req.body.Cost;
-    const Pic ="../img/" + ProductName + ".jpg";
-
-    //database query
-    dbConn.query("INSERT INTO Products (ProductName,Category,Description,Cost,Pic) VALUES (?,?,?,?,?)", [ProductName,Category,Description,Cost,Pic], function (err, result) {
-
-        //if an error occures
-        if (err) {
-            console.log(err)
-            const error = "name taken";
-            res.render('testForm', { error });
-        } else {//register user
-            const error = "Product inserted"
-            console.log("Product inserted");
-            req.files.sampleFile.mv("../Client/img/"+ ProductName+".jpg", function(err){
-                if(err){
-                    res.render(err)            
-                }else{
-                    res.render("testForm",{error})
-                }
-            });
-        }
-    });
-});
+app.post('/addProduct', addProduct);
 
 app.get("/displayPage", function (req, res){
     dbConn.query("SELECT * FROM Products",function(err,rows){
