@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, checknotLoggedIn, checkLoggedIn} = require('./ServerProcessing/LoginRegister')
 const {sendEmail} = require('./Email/email')
+const {dbConn} = require('../Config/db.config');
 
 //configre express app
 const app = express();
@@ -21,6 +22,7 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 app.use(cookieParser(process.env.SECRETE));//change this and make it secrete
 app.set('views', path.join(__dirname, '../Client/views'));//show express the views directory
 app.use(express.static(path.join(__dirname, '../Client')));//show express the Client directory
+app.use(express.static(path.join(__dirname, '../Pictures')));
 app.use(seshOption)//configuration for express session
 app.use(upload())
 
@@ -77,24 +79,52 @@ app.post("/Authenticate",Authenticate);
 
 //test proj
 app.get("/testFormPage",function(req,res){
-    res.render("testForm")
+    const error = ""
+    res.render("testForm",{error})
 })
-app.post('/testfile', function(req, res) {
-    console.log(req.files); // the uploaded file object
-    var file = req.files.sampleFile
-    var filename = file.name
-    console.log(filename);
+app.post('/addProduct', function(req, res) {
+    const ProductName = req.body.Name;
+    const Category = req.body.Category;
 
-    file.mv("../Pictures/"+filename, function(err){
-        if(err){
-            res.render(err)            
-        }else{
-            res.render("testForm")
+    const Description = req.body.Description;
+    const Cost = req.body.Cost;
+    const Pic ="../img/" + ProductName + ".jpg";
+
+    //database query
+    dbConn.query("INSERT INTO Products (ProductName,Category,Description,Cost,Pic) VALUES (?,?,?,?,?)", [ProductName,Category,Description,Cost,Pic], function (err, result) {
+
+        //if an error occures
+        if (err) {
+            console.log(err)
+            const error = "name taken";
+            res.render('testForm', { error });
+        } else {//register user
+            const error = "Product inserted"
+            console.log("Product inserted");
+            req.files.sampleFile.mv("../Client/img/"+ ProductName+".jpg", function(err){
+                if(err){
+                    res.render(err)            
+                }else{
+                    res.render("testForm",{error})
+                }
+            });
         }
     });
-
 });
 
+app.get("/displayPage", function (req, res){
+    dbConn.query("SELECT * FROM Products",function(err,rows){
+        if(err){
+            //if an error occures
+            res.redirect("/testFormPage")
+        }
+        else{
+            const newListItems = rows;
+            res.render('display',{newListItems});
+        }
+
+    });
+})
 
 
 
