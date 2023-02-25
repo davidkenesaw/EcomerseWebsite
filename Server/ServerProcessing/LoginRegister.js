@@ -72,21 +72,12 @@ function Authenticate(req,res){
     const code = req.body.Code
     console.log(code + " " + req.session.Code)
     if(code == req.session.Code){
-        res.redirect("/HomeLoggedInPage")
+        res.redirect("/")
     }else{
         const error = "Code was wrong"
         res.render("TwoStepAuth",{error})
     }
 }
-function checkLoggedIn(req, res,next){
-    
-    if(req.session.loggedIn){
-        return res.redirect("/HomeLoggedInPage")
-    }next()
-}
-function checknotLoggedIn(req, res,next){
-    if(!req.session.loggedIn){
-        return res.redirect("/")
-    }next()
-}
-module.exports = {SignUp, Login, Authenticate, checkLoggedIn, checknotLoggedIn};
+
+
+module.exports = {SignUp, Login, Authenticate};

@@ -8,7 +8,7 @@ const express = require("express");
 const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
-const {SignUp, Login, Authenticate, checknotLoggedIn, checkLoggedIn} = require('./ServerProcessing/LoginRegister')
+const {SignUp, Login, Authenticate} = require('./ServerProcessing/LoginRegister')
 const {addProduct,displayProducts} = require('./ServerProcessing/ProductFunct')
 const {sendEmail} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
@@ -28,20 +28,42 @@ app.use(seshOption)//configuration for express session
 app.use(upload())
 
 //get requests 
-app.get('/', checkLoggedIn,function(req,res){
-    res.render("Home");
-});
-app.get('/HomeLoggedInPage', function(req,res){
-    const name = req.session.FirstName
-    res.render("HomeLoggedIn",{name});
+app.get('/', function(req,res){
+    var logged;
+    var name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+
+
+    res.render("Home",{logged,name});
 });
 app.get('/StorePage', function(req,res){
-    res.render("Store");
+    var logged;
+    var name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    res.render("Store",{logged,name});
 });
 app.get('/CartPage', function(req,res){
-    res.render("Cart");
+    var logged;
+    var name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    res.render("Cart",{logged,name});
 });
-app.get('/LoginPage',checkLoggedIn, function(req,res){
+app.get('/LoginPage', function(req,res){
     const error = ""
     res.render("Login",{error});
 });
@@ -57,7 +79,7 @@ app.get('/TwoStepAuthPage', function(req,res){
     const error = ""
     res.render("TwoStepAuth",{error});
 });
-app.get("/SignOut",checknotLoggedIn,function(req,res){
+app.get("/SignOut",function(req,res){
     req.session.UserName = null;
     req.session.FirstName = null;
     req.session.Lastname = null;
@@ -65,7 +87,7 @@ app.get("/SignOut",checknotLoggedIn,function(req,res){
     req.session.loggedIn = null;
     req.session.Admin = null;
     req.session.Code = null;
-    res.render("Home")
+    res.redirect("/")
 })
 
 //post requests

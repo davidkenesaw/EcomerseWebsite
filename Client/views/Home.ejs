@@ -9,7 +9,13 @@
 </head>
 <body>
     <nav class="nav">
-        <a class="" href="/LoginPage">Login</a>
+        <% if(logged == true){%>
+            <%= name %>
+            <a class="" href="/SignOut">Sign out</a>
+        <%}else{%>
+            <a class="" href="/LoginPage">Login</a>
+        <%}%>
+        
     </nav>
 
     <nav class="nav">

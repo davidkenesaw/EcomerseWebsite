@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
     
@@ -14,15 +16,19 @@
 
     <ul class="fullclick">
         <% for (var i=0; i < newListItems.length ; i++) { %>
-            <li>
+            
                 <form action=""method="get">
-                    <img src="<%= newListItems[i].Pic %>" >
-                    <h2><%= newListItems[i].ProductName %></h2>
-                    <h2><%= newListItems[i].Category %></h2>
-                    <h2><%= newListItems[i].Description %></h2>
-                    <h2><%= newListItems[i].Cost %></h2>
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="<%= newListItems[i].Pic %>" width="286" height="180" >
+                        <div class="card-body">
+                            <h5 class="card-title"><%= newListItems[i].ProductName %></h5>
+                            <p class="card-text"><%= newListItems[i].Description %></p>
+                            <p class="card-text"><%= newListItems[i].Cost %></p>
+                            <button class="btn btn-dark" type="submit">Buy</button>
+                        </div>
+                    </div>
                 </form>
-            </li>
+            
             <% } %>
         
       </ul>
