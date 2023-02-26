@@ -8,20 +8,8 @@
     
 </head>
 <body>
-    <nav class="nav">
-        <% if(logged == true){%>
-            <%= name %>
-            <a class="" href="/SignOut">Sign out</a>
-        <%}else{%>
-            <a class="" href="/LoginPage">Login</a>
-        <%}%>
-        
-    </nav>
-
-    <nav class="nav">
-        <a class="" href="/">Home</a>
-        <a class="" href="/StorePage">Store</a>
-        <a class="" href="/CartPage">Cart</a>
-    </nav>
+    
+    <%- include('../Partials/LoginNav.ejs') %>
+    <%- include('../Partials/MainNav.ejs') %>
 </body>
 </html>

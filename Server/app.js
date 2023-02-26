@@ -24,6 +24,7 @@ app.use(cookieParser(process.env.SECRETE));//change this and make it secrete
 app.set('views', path.join(__dirname, '../Client/views'));//show express the views directory
 app.use(express.static(path.join(__dirname, '../Client')));//show express the Client directory
 app.use(express.static(path.join(__dirname, '../Pictures')));
+app.use(express.static(path.join(__dirname, '../Partials')));
 app.use(seshOption)//configuration for express session
 app.use(upload())
 
@@ -41,16 +42,62 @@ app.get('/', function(req,res){
 
     res.render("Home",{logged,name});
 });
-app.get('/StorePage', function(req,res){
+app.get('/StorePage/:Category', function(req,res){
     var logged;
     var name;
+    var catagory;
+    var newListItems;
     if(req.session.UserName){
         name = req.session.FirstName
         logged = true
     }else{
         logged = false
     }
-    res.render("Store",{logged,name});
+    dbConn.query("SELECT * FROM StoreCategory",function(err,rows){
+        if(err){
+            //if an error occures
+            res.send(err)
+        }
+        else{
+
+            if(req.params.Category == "All"){
+                catagory = rows;
+                dbConn.query("SELECT * FROM Products",function(err,results){
+                    if(err){
+                        //if an error occures
+                        res.send(err)
+                    }
+                    else{
+                        newListItems = results;
+                        res.render('Store',{logged,name,newListItems,catagory});
+                    }
+
+                });
+            }else{
+                catagory = rows;
+                dbConn.query("SELECT * FROM Products WHERE Category = ?",[req.params.Category],function(err,results){
+                    if(err){
+                        //if an error occures
+                        res.send(err)
+                    }
+                    else{
+                        newListItems = results;
+                        res.render('Store',{logged,name,newListItems,catagory});
+                    }
+
+                });
+            }
+
+
+
+
+            
+        }
+
+    });
+
+    
+    
 });
 app.get('/CartPage', function(req,res){
     var logged;
@@ -62,6 +109,39 @@ app.get('/CartPage', function(req,res){
         logged = false
     }
     res.render("Cart",{logged,name});
+});
+app.get('/AboutPage', function(req,res){
+    var logged;
+    var name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    res.render("Cart",{logged,name});
+});
+app.get('/PortfolioPage', function(req,res){
+    var logged;
+    var name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    res.render("Portfolio",{logged,name});
+});
+app.get('/ContactPage', function(req,res){
+    var logged;
+    var name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    res.render("Contact",{logged,name});
 });
 app.get('/LoginPage', function(req,res){
     const error = ""
@@ -103,11 +183,13 @@ app.post("/Authenticate",Authenticate);
 //test proj
 app.get("/testFormPage",function(req,res){
     const error = ""
+    
     res.render("testForm",{error})
 })
 app.post('/addProduct', addProduct);
 
 app.get("/displayPage", function (req, res){
+    console.log(req)
     dbConn.query("SELECT * FROM Products",function(err,rows){
         if(err){
             //if an error occures
@@ -120,7 +202,16 @@ app.get("/displayPage", function (req, res){
 
     });
 })
+app.get("/shop",function (req, res){
+    var name = ["Home", "cart","shop","about"]
 
+    res.render("plzWork",{name})
+})
+app.get("/shop/:name", function(req,res){
+    //
+
+    res.send("you are seeing" + req.params.name);
+})
 
 
 app.listen(process.env.PORT || 3000, function () {//host site
