@@ -33,17 +33,55 @@ function addProduct(req, res) {
     });
 }
 
-function displayProducts(req, res){
-    dbConn.query("SELECT * FROM Products",function(err,rows){
+function StoreDisplay(req, res){
+    let logged;
+    let name;
+    let catagory;
+    let newListItems;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    dbConn.query("SELECT * FROM StoreCategory",function(err,rows){
         if(err){
             //if an error occures
-            res.redirect("/testFormPage")
+            res.send(err)
         }
         else{
-            const newListItems = rows;
-            res.render('display',{newListItems});
+
+            if(req.params.Category == "All"){
+                catagory = rows;
+                dbConn.query("SELECT * FROM Products",function(err,results){
+                    if(err){
+                        //if an error occures
+                        res.send(err)
+                    }
+                    else{
+                        newListItems = results;
+                        res.render('Store',{logged,name,newListItems,catagory});
+                    }
+
+                });
+            }else{
+                catagory = rows;
+                dbConn.query("SELECT * FROM Products WHERE Category = ?",[req.params.Category],function(err,results){
+                    if(err){
+                        //if an error occures
+                        res.send(err)
+                    }
+                    else{
+                        newListItems = results;
+                        res.render('Store',{logged,name,newListItems,catagory});
+                    }
+
+                });
+            }
+ 
         }
 
     });
+  
 }
-module.exports = {addProduct,displayProducts};
+module.exports = {addProduct,StoreDisplay};

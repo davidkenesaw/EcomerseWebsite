@@ -9,7 +9,7 @@ const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate} = require('./ServerProcessing/LoginRegister')
-const {addProduct,displayProducts} = require('./ServerProcessing/ProductFunct')
+const {addProduct,StoreDisplay} = require('./ServerProcessing/ProductFunct')
 const {sendEmail} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 
@@ -30,8 +30,8 @@ app.use(upload())
 
 //get requests 
 app.get('/', function(req,res){
-    var logged;
-    var name;
+    let logged;
+    let name;
     if(req.session.UserName){
         name = req.session.FirstName
         logged = true
@@ -42,66 +42,10 @@ app.get('/', function(req,res){
 
     res.render("Home",{logged,name});
 });
-app.get('/StorePage/:Category', function(req,res){
-    var logged;
-    var name;
-    var catagory;
-    var newListItems;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    dbConn.query("SELECT * FROM StoreCategory",function(err,rows){
-        if(err){
-            //if an error occures
-            res.send(err)
-        }
-        else{
-
-            if(req.params.Category == "All"){
-                catagory = rows;
-                dbConn.query("SELECT * FROM Products",function(err,results){
-                    if(err){
-                        //if an error occures
-                        res.send(err)
-                    }
-                    else{
-                        newListItems = results;
-                        res.render('Store',{logged,name,newListItems,catagory});
-                    }
-
-                });
-            }else{
-                catagory = rows;
-                dbConn.query("SELECT * FROM Products WHERE Category = ?",[req.params.Category],function(err,results){
-                    if(err){
-                        //if an error occures
-                        res.send(err)
-                    }
-                    else{
-                        newListItems = results;
-                        res.render('Store',{logged,name,newListItems,catagory});
-                    }
-
-                });
-            }
-
-
-
-
-            
-        }
-
-    });
-
-    
-    
-});
+app.get('/StorePage/:Category', StoreDisplay);
 app.get('/CartPage', function(req,res){
-    var logged;
-    var name;
+    let logged;
+    let name;
     if(req.session.UserName){
         name = req.session.FirstName
         logged = true
@@ -111,8 +55,8 @@ app.get('/CartPage', function(req,res){
     res.render("Cart",{logged,name});
 });
 app.get('/AboutPage', function(req,res){
-    var logged;
-    var name;
+    let logged;
+    let name;
     if(req.session.UserName){
         name = req.session.FirstName
         logged = true
@@ -122,8 +66,8 @@ app.get('/AboutPage', function(req,res){
     res.render("Cart",{logged,name});
 });
 app.get('/PortfolioPage', function(req,res){
-    var logged;
-    var name;
+    let logged;
+    let name;
     if(req.session.UserName){
         name = req.session.FirstName
         logged = true
@@ -133,8 +77,8 @@ app.get('/PortfolioPage', function(req,res){
     res.render("Portfolio",{logged,name});
 });
 app.get('/ContactPage', function(req,res){
-    var logged;
-    var name;
+    let logged;
+    let name;
     if(req.session.UserName){
         name = req.session.FirstName
         logged = true
@@ -188,33 +132,11 @@ app.get("/testFormPage",function(req,res){
 })
 app.post('/addProduct', addProduct);
 
-app.get("/displayPage", function (req, res){
-    console.log(req)
-    dbConn.query("SELECT * FROM Products",function(err,rows){
-        if(err){
-            //if an error occures
-            res.redirect("/testFormPage")
-        }
-        else{
-            const newListItems = rows;
-            res.render('display',{newListItems});
-        }
-
-    });
-})
-app.get("/shop",function (req, res){
-    var name = ["Home", "cart","shop","about"]
-
-    res.render("plzWork",{name})
-})
-app.get("/shop/:name", function(req,res){
-    //
-
-    res.send("you are seeing" + req.params.name);
-})
 
 
-app.listen(process.env.PORT || 3000, function () {//host site
+
+
+app.listen(process.env.PORT || 3001, function () {//host site
     console.log("Port: 3000");
     
 });
