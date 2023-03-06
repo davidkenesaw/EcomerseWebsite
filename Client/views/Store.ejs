@@ -25,25 +25,26 @@
         <% } %>
     </nav>
     
-    <ul class="fullclick">
-        <% for (var i=0; i < newListItems.length ; i++) { %>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col"  style="background-color: rgb(255, 17, 0);"></div>
             
-                <form action=""method="get">
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="<%= newListItems[i].Pic %>" width="286" height="180" >
-                        <div class="card-body">
-                            <h5 class="card-title"><%= newListItems[i].ProductName %></h5>
-                            <p class="card-text"><%= newListItems[i].Description %></p>
-                            <p class="card-text"><%= newListItems[i].Cost %></p>
-                            <button class="btn btn-dark" type="submit">Buy</button>
-                        </div>
-                    </div>
-                </form>
-            
-            <% } %>
+    <% for (var i=0; i < newListItems.length ; i++) { %>
+        <div class="col" style="background-color: blue;">
         
-      </ul>
-      
-
-</body>
-</html>
+            <form action=""method="get">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="<%= newListItems[i].Pic %>" width="286" height="180" >
+                    <div class="card-body">
+                        <h5 class="card-title"><%= newListItems[i].ProductName %></h5>
+                        <p class="card-text"><%= newListItems[i].Description %></p>
+                        <p class="card-text"><%= newListItems[i].Cost %></p>
+                        <button class="btn btn-dark" type="submit">Buy</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <% } %>
+    <div class="col"  style="background-color: rgb(255, 0, 170);"></div>
+</div>
+</div>

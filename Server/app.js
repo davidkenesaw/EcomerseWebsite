@@ -63,7 +63,7 @@ app.get('/AboutPage', function(req,res){
     }else{
         logged = false
     }
-    res.render("Cart",{logged,name});
+    res.render("About",{logged,name});
 });
 app.get('/PortfolioPage', function(req,res){
     let logged;
