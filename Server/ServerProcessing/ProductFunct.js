@@ -17,7 +17,7 @@ function addProduct(req, res) {
             const error = "name taken";
             res.render('testForm', { error });
         } else {//register user
-            var error = "Product inserted"
+            let error = "Product inserted"
             console.log("Product inserted");
             const path = "../Client/img/"+ ProductName+".jpg"
             console.log(path)

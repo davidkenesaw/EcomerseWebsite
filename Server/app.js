@@ -39,7 +39,6 @@ app.get('/', function(req,res){
         logged = false
     }
 
-
     res.render("Home",{logged,name});
 });
 app.get('/StorePage/:Category', StoreDisplay);
@@ -122,8 +121,6 @@ app.post("/Authenticate",Authenticate);
 
 
 
-
-
 //test proj
 app.get("/testFormPage",function(req,res){
     const error = ""
@@ -131,7 +128,6 @@ app.get("/testFormPage",function(req,res){
     res.render("testForm",{error})
 })
 app.post('/addProduct', addProduct);
-
 
 
 
