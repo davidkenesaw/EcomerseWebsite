@@ -23,13 +23,21 @@
             <li class="nav-item">
                 <a class="nav-link" href="/PortfolioPage">Portfolio</a>
             </li>
-            <% if(logged == true){ %>
+            <% if(logged.user == true){ %>
                 <li class="nav-item">
                     <a class="nav-link" href="/">Acount</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/SignOut">Sign Out</a>
                 </li>
+                <% if(logged.admin == true){ %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Add Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Add Product Catagory</a>
+                    </li>
+                <%}%>
             <%}else{%>
                 <li class="nav-item">
                     <a class="nav-link" href="/LoginPage">Login</a>

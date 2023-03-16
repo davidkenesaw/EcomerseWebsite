@@ -79,11 +79,17 @@ function Authenticate(req,res){
     }
 }
 function ifLoggedHelper(req){
+    let obj = {
+        user:false,
+        admin:false
+    };
     if(req.session.UserName){
-        return true
-    }else{
-        return false
+        obj.user = true
     }
+    if(req.session.Admin == 1){
+        obj.admin = true
+    }
+    return obj;
 }
 
 module.exports = {SignUp, Login, Authenticate,ifLoggedHelper};
