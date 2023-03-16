@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../Partials/BootStrap.ejs') %>
+</head>
+<body>
+    <%- include('../Partials/LoginNav.ejs') %>
+    <%- include('../Partials/MainNav.ejs') %>
+
+    <div class="row">
+        <div class="col-md-6">
+            <img class="" src="../<%= product[0].Pic %>" width="286" height="180" >
+        </div>
+        <div class="col-md-3">
+            <ul class="list-group-flush">
+                <li class="list-group-item"><h3><%= product[0].ProductName %></h3></li>
+                <li class="list-group-item"><%= product[0].Cost %></li>
+                <li class="list-group-item"><%= product[0].Description %></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            Price:
+                        </div>
+                        <div class="col">
+                            <strong>$<%= product[0].Cost %></strong>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            Status:
+                        </div>
+                        <div class="col">
+                            <strong><%= product[0].Stock %></strong>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                        <% if(product[0].Stock==0){ %>
+                            <button type="submit" disabled>Add to cart</button>
+                        <%}else{%>
+                            <button type="submit">Add to cart</button>
+                        <%}%>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    
+
+
+</body>
+</html>

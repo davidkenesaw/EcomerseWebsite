@@ -28,7 +28,7 @@
     <% for (var i=0; i < newListItems.length ; i++) { %>
         <div class="col-md-auto">
         
-            <form action=""method="get">
+            <form action="/StorePage/Product/<%=newListItems[i].id%>"method="get">
                 <div class="card" style="width: 18rem;">
                     <img class="card-img-top" src="<%= newListItems[i].Pic %>" width="286" height="180" >
                     <div class="card-body">
