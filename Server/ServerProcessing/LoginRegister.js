@@ -78,6 +78,12 @@ function Authenticate(req,res){
         res.render("TwoStepAuth",{error})
     }
 }
+function ifLoggedHelper(req){
+    if(req.session.UserName){
+        return true
+    }else{
+        return false
+    }
+}
 
-
-module.exports = {SignUp, Login, Authenticate};
+module.exports = {SignUp, Login, Authenticate,ifLoggedHelper};

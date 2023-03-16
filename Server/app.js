@@ -8,7 +8,7 @@ const express = require("express");
 const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
-const {SignUp, Login, Authenticate} = require('./ServerProcessing/LoginRegister')
+const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
 const {addProduct,StoreDisplay, ProductPage} = require('./ServerProcessing/ProductFunct')
 const {sendEmail} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
@@ -30,62 +30,32 @@ app.use(upload())
 
 //get requests 
 app.get('/', function(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-
-    res.render("Home",{logged,name});
+    let logged = ifLoggedHelper(req);
+    res.render("Home",{logged});
 });
+app.get("/AccountPage",function(req,res){
+    let logged = ifLoggedHelper(req);
+    
+
+    res.render("Account",{logged});
+})
 app.get('/StorePage/:Category', StoreDisplay);
 app.get('/StorePage/Product/:id',ProductPage)
 app.get('/CartPage', function(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    res.render("Cart",{logged,name});
+    let logged = ifLoggedHelper(req);
+    res.render("Cart",{logged});
 });
 app.get('/AboutPage', function(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    res.render("About",{logged,name});
+    let logged = ifLoggedHelper(req);
+    res.render("About",{logged});
 });
 app.get('/PortfolioPage', function(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    res.render("Portfolio",{logged,name});
+    let logged = ifLoggedHelper(req);
+    res.render("Portfolio",{logged});
 });
 app.get('/ContactPage', function(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    res.render("Contact",{logged,name});
+    let logged = ifLoggedHelper(req);
+    res.render("Contact",{logged});
 });
 app.get('/LoginPage', function(req,res){
     const error = ""

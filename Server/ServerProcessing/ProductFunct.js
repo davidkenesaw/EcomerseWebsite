@@ -1,4 +1,5 @@
 const {dbConn} = require('../../Config/db.config');
+const {ifLoggedHelper} = require('./LoginRegister')
 //test proj
 
 function addProduct(req, res) {
@@ -34,16 +35,9 @@ function addProduct(req, res) {
 }
 
 function StoreDisplay(req, res){
-    let logged;
-    let name;
     let catagory;
     let newListItems;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
+    let logged = ifLoggedHelper(req);
     dbConn.query("SELECT * FROM StoreCategory",function(err,rows){
         if(err){
             //if an error occures
@@ -60,7 +54,7 @@ function StoreDisplay(req, res){
                     }
                     else{
                         newListItems = results;
-                        res.render('Store',{logged,name,newListItems,catagory});
+                        res.render('Store',{logged,newListItems,catagory});
                     }
 
                 });
@@ -73,7 +67,7 @@ function StoreDisplay(req, res){
                     }
                     else{
                         newListItems = results;
-                        res.render('Store',{logged,name,newListItems,catagory});
+                        res.render('Store',{logged,newListItems,catagory});
                     }
 
                 });
@@ -86,22 +80,14 @@ function StoreDisplay(req, res){
   
 }
 function ProductPage(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    
+    let logged = ifLoggedHelper(req);
     const id = req.params.id
     dbConn.query("SELECT * FROM Products WHERE id = ?",[id],function(err,results){
         if(err){
             res.redirect("/StorePage/All")
         }else{
             const product = results;
-            res.render("ProductPage",{logged,name,product})
+            res.render("ProductPage",{logged,product})
             //res.send(product)
         }
     })
