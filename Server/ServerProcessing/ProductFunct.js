@@ -82,6 +82,28 @@ function StoreDisplay(req, res){
         }
 
     });
+    
   
 }
-module.exports = {addProduct,StoreDisplay};
+function ProductPage(req,res){
+    let logged;
+    let name;
+    if(req.session.UserName){
+        name = req.session.FirstName
+        logged = true
+    }else{
+        logged = false
+    }
+    
+    const id = req.params.id
+    dbConn.query("SELECT * FROM Products WHERE id = ?",[id],function(err,results){
+        if(err){
+            res.redirect("/StorePage/All")
+        }else{
+            const product = results;
+            res.render("ProductPage",{logged,name,product})
+            //res.send(product)
+        }
+    })
+}
+module.exports = {addProduct, StoreDisplay, ProductPage};

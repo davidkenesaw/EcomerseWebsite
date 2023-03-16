@@ -9,7 +9,7 @@ const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate} = require('./ServerProcessing/LoginRegister')
-const {addProduct,StoreDisplay} = require('./ServerProcessing/ProductFunct')
+const {addProduct,StoreDisplay, ProductPage} = require('./ServerProcessing/ProductFunct')
 const {sendEmail} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 
@@ -42,29 +42,7 @@ app.get('/', function(req,res){
     res.render("Home",{logged,name});
 });
 app.get('/StorePage/:Category', StoreDisplay);
-app.get('/StorePage/Product/:id',function(req,res){
-    let logged;
-    let name;
-    if(req.session.UserName){
-        name = req.session.FirstName
-        logged = true
-    }else{
-        logged = false
-    }
-    
-    
-    const id = req.params.id
-    dbConn.query("SELECT * FROM Products WHERE id = ?",[id],function(err,results){
-        if(err){
-            res.redirect("/StorePage/All")
-        }else{
-            const product = results;
-            console.log(product[0].Pic)
-            res.render("ProductPage",{logged,name,product})
-            //res.send(product)
-        }
-    })
-})
+app.get('/StorePage/Product/:id',ProductPage)
 app.get('/CartPage', function(req,res){
     let logged;
     let name;
