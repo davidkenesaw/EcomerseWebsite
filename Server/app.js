@@ -38,6 +38,21 @@ app.get("/AccountPage",function(req,res){
     const user = req.session
     res.render("Account",{logged,user});
 })
+app.get("/AddProductPage",function(req,res){
+    let logged = ifLoggedHelper(req);
+    const user = req.session
+    res.render("AddProduct",{logged,user});
+})
+app.get("/EditProductPage",function(req,res){
+    let logged = ifLoggedHelper(req);
+    const user = req.session
+    res.render("EditProduct",{logged,user});
+})
+app.get("/EditStoreLayoutPage",function(req,res){
+    let logged = ifLoggedHelper(req);
+    const user = req.session
+    res.render("EditStoreLayout",{logged,user});
+})
 app.get('/StorePage/:Category', StoreDisplay);
 app.get('/StorePage/Product/:id',ProductPage)
 app.get('/CartPage', function(req,res){
