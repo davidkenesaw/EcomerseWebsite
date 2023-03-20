@@ -48,7 +48,11 @@
                         <% if(product[0].Stock==0){ %>
                             <button type="submit" disabled>Add to cart</button>
                         <%}else{%>
-                            <button type="submit">Add to cart</button>
+                            <form action="/AddToCart" method="post">
+                                <input type="number" name="Amount" min="1" max="<%=product[0].Stock%>">
+                                <button type="submit">Add to cart</button>
+                            </form>
+                            
                         <%}%>
                 </li>
             </ul>

@@ -9,6 +9,26 @@
 </head>
 <body>
     <%- include('../Partials/MainNav.ejs') %>
+
+
+
+
+    <form action="/addProduct" method="post" enctype="multipart/form-data">
+        <input placeholder="Enter Product Name" type="text" name="Name" >
+        <input placeholder="Enter Category" type="text" name="Category" >
+        <input placeholder="Enter Description" type="text" name="Description" >
+        <input placeholder="Enter Cost" type="text" name="Cost" >
+        <input placeholder="Enter stock amount" type="number" min="0" max="100" name="Stock" >
+        <input type="file" name="sampleFile" />
+		<input type='submit' value='Upload!' />
+    </form>
+    <%= error %>
+
+
+
+
+
+
     <%- include('../Partials/Footer.ejs') %>
 </body>
 </html>
