@@ -106,6 +106,7 @@ app.get('/TwoStepAuthPage', function(req,res){
     const error = ""
     res.render("TwoStepAuth",{error});
 });
+//sign out
 app.get("/SignOut",function(req,res){
     req.session.UserName = null;
     req.session.FirstName = null;
