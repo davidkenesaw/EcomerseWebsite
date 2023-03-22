@@ -3,6 +3,7 @@ const {ifLoggedHelper} = require('../LoginRegister')
 //test proj
 
 function addProduct(req, res) {
+    let logged = ifLoggedHelper(req);
     const ProductName = req.body.Name;
     const Category = req.body.Category;
 
@@ -18,7 +19,7 @@ function addProduct(req, res) {
         if (err) {
             console.log(err)
             const error = "name taken";
-            res.render('testForm', { error });
+            res.render('AddProduct', { logged,error });
         } else {//register user
             
             let error = "Product inserted"
@@ -26,7 +27,7 @@ function addProduct(req, res) {
             
             dbConn.query("SELECT id from Products ORDER BY id DESC LIMIT 1", function (err, id) {
                 if(err){
-
+                    res.send(err)
                 }else{
                     Pic ="../img/" + ProductName.replace(/\s/g, '') + id[0].id + ".jpg";
                     const path = "../Client/img/"+ ProductName.replace(/\s/g, '') + id[0].id+".jpg"
@@ -36,9 +37,9 @@ function addProduct(req, res) {
                         req.files.sampleFile.mv(path, function(err){
                             if(err){
                                 error = "something wrong with path"
-                                res.render("testForm",{error})            
+                                res.render("AddProduct",{logged,error})            
                             }else{
-                                res.render("testForm",{error})
+                                res.render("AddProduct",{logged,error})
                             }
                         });
                     })
@@ -120,10 +121,11 @@ function AddToCart(req,res){
     let CurrentCart= []
     CurrentCart = req.cookies.Cart;
     
-    
-    for(let loop = 0; loop < amount; loop++){
-        CurrentCart.push(product)
+    const obj = {
+        id:product,
+        amount:amount
     }
+    CurrentCart.push(obj)
     console.log(req.cookies.Cart)
     res.cookie("Cart",CurrentCart)
 

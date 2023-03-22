@@ -57,6 +57,12 @@ app.get("/EditStoreLayoutPage",function(req,res){
 app.get('/StorePage/:Category', StoreDisplay);
 app.get('/StorePage/Product/:id',ProductPage)
 app.get('/CartPage', function(req,res){
+    
+    if(req.cookies.Cart == null){
+        res.cookie("Cart",[])
+        return res.redirect("/CartPage")
+    }
+    
     let logged = ifLoggedHelper(req);
     let Cart = req.cookies.Cart
     let display = []
@@ -67,7 +73,8 @@ app.get('/CartPage', function(req,res){
         }
         else{
             for(let loop = 0; loop < Cart.length; loop++){
-                display.push(results.find(product => product.id == Cart[loop]))
+                display.push(results.find(product => product.id == Cart[loop].id))
+                display[loop].amount = Cart[loop].amount
             }
             console.log(display)
             return res.render('Cart',{logged,display})
@@ -123,15 +130,6 @@ app.post("/SignUp",SignUp);
 app.post("/Login",Login);
 app.post("/Authenticate",Authenticate);
 app.post("/AddToCart/:id",AddToCart)
-
-
-
-//test proj
-app.get("/testFormPage",function(req,res){
-    const error = ""
-    
-    res.render("testForm",{error})
-})
 app.post('/addProduct', addProduct);
 
 
