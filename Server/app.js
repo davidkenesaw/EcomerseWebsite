@@ -131,7 +131,17 @@ app.post("/Login",Login);
 app.post("/Authenticate",Authenticate);
 app.post("/AddToCart/:id",AddToCart)
 app.post('/addProduct', addProduct);
+app.post('/DeleteCart/:id', function(req,res){
+    const productID = req.params.id
+    console.log(productID)
 
+    let Cart = req.cookies.Cart
+    Cart = Cart.filter(product => product.id!=productID)
+    console.log(Cart)
+    res.cookie("Cart",Cart)
+
+    res.redirect("/CartPage")
+});
 
 
 
