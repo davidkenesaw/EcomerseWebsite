@@ -76,7 +76,6 @@ app.get('/CartPage', function(req,res){
                 display.push(results.find(product => product.id == Cart[loop].id))
                 display[loop].amount = Cart[loop].amount
             }
-            console.log(display)
             return res.render('Cart',{logged,display})
         }
 

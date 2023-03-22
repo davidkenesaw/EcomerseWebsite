@@ -121,13 +121,22 @@ function AddToCart(req,res){
     let CurrentCart= []
     CurrentCart = req.cookies.Cart;
     
-    const obj = {
-        id:product,
-        amount:amount
+    let alert1 = CurrentCart.find(pr=>pr.id==product)
+    
+    if(alert1 == null){
+        const obj = {
+            id:product,
+            amount:amount
+        }
+        CurrentCart.push(obj)
+        
+    }else{
+        let i = CurrentCart.findIndex(pr => pr.id == product)
+        CurrentCart[i].amount = amount
+        
     }
-    CurrentCart.push(obj)
-    res.cookie("Cart",CurrentCart)
 
+    res.cookie("Cart",CurrentCart)
     res.redirect("/CartPage")
 
 }
