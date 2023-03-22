@@ -126,7 +126,6 @@ function AddToCart(req,res){
         amount:amount
     }
     CurrentCart.push(obj)
-    console.log(req.cookies.Cart)
     res.cookie("Cart",CurrentCart)
 
     res.redirect("/CartPage")
