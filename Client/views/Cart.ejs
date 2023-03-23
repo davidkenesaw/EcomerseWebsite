@@ -26,9 +26,11 @@
                         <p class="card-text">Description: <%= display[i].Description %></p>
                         <p class="card-text">Cost: <%= display[i].Cost %></p>
                         <p class="card-text">Amount: <%= display[i].amount %></p>
+                        
                         <form action="/DeleteCart/<%= display[i].id %>" method="post">
                             <button type="submit">Remove from Cart</button>
                         </form>
+
                     </div>
                 </div>
             
@@ -39,7 +41,11 @@
 </div>
 
 
-<button type="submit" class="btn btn-primary">Checkout</button>
+<% if(display.length > 0){ %>
+    <form action="" method="">
+        <button type="submit">Check out</button>
+    </form>
+<%}%>
 
 
 
