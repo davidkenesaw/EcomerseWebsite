@@ -176,7 +176,7 @@ app.post('/CheckOut',function(req,res){
                 itemList.push(item)
                 total += (parseInt(productList.find(prod => prod.id == Cart[loop].id).Cost)*parseInt(Cart[loop].amount))
             }
-            console.log(itemList)
+            
             console.log(total)
 
             const item_list = JSON.stringify(itemList)
@@ -194,24 +194,25 @@ app.post('/CheckOut',function(req,res){
                         "items": [{
                             "name": "item",
                             "sku": "item",
-                            "price": "10.00",
+                            "price": String(total),
                             "currency": "USD",
                             "quantity": 1
                         }]
                     },
                     "amount": {
                         "currency": "USD",
-                        "total": "10.00"
+                        "total": String(total)
                     },
                     "description": "This is the payment description."
                 }]
             };
-            console.log(create_payment_json)
+            
             
             paypal.payment.create(create_payment_json, function (error, payment) {
                 if (error) {
                     throw error;
                 } else {
+                    req.session.CartTotal = String(total)
                     for(let loop = 0; loop < payment.links.length; loop++){
                         if(payment.links[loop].rel == 'approval_url'){
                             res.redirect(payment.links[loop].href)
@@ -230,14 +231,15 @@ app.post('/CheckOut',function(req,res){
 app.get('/success', (req, res) => {
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
-    console.log(req)
+    let total = req.session.CartTotal
+    
   
     const execute_payment_json = {
       "payer_id": payerId,
       "transactions": [{
         "amount": {
           "currency": "USD",
-          "total": "10.00"
+          "total": String(total)
         }
       }]
     }
@@ -246,7 +248,7 @@ app.get('/success', (req, res) => {
         console.log(error.response);
         throw error;
       } else {
-        console.log(JSON.stringify(payment));
+        res.cookie("Cart",[])
         res.send('Success');
       }
     });
