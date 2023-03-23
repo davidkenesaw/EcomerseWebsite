@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
 const {addProduct,StoreDisplay, ProductPage,AddToCart} = require('./ServerProcessing/Product/ProductFunct')
-const {sendEmail} = require('./Email/email')
+const {sendEmail, EmailFromWeb} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 
 //configre express app
@@ -138,7 +138,7 @@ app.post('/DeleteCart/:id', function(req,res){
 
     res.redirect("/CartPage")
 });
-
+app.post('/ContactSend', EmailFromWeb);
 
 
 app.listen(process.env.PORT || 3001, function () {//host site

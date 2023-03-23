@@ -9,6 +9,14 @@
 </head>
 <body>
     <%- include('../Partials/MainNav.ejs') %>
+    
+    <form action="/ContactSend" method="post">
+        <input name="FirstName" placeholder="First Name">
+        <input name="LastName" placeholder="Last Name">
+        <input name="Email" placeholder="Email">
+        <textarea name="Content" id="" cols="30" rows="10" placeholder="What you thinkin"></textarea>
+        <button type="submit">Send</button>
+    </form>
     <%- include('../Partials/Footer.ejs') %>
 </body>
 </html>
