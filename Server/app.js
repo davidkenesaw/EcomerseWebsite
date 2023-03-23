@@ -4,9 +4,9 @@ require('dotenv').config({
     path: path.resolve(__dirname, '../.env')
 })
 const express = require("express");
-
 const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
+const paypal = require('paypal-rest-sdk')
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
 const {addProduct,StoreDisplay, ProductPage,AddToCart} = require('./ServerProcessing/Product/ProductFunct')
@@ -27,6 +27,11 @@ app.use(express.static(path.join(__dirname, '../Pictures')));
 app.use(express.static(path.join(__dirname, '../Partials')));
 app.use(seshOption)//configuration for express session
 app.use(upload())
+paypal.configure({
+    'mode':'sandbox',
+    'client_id':'AXKybnkFLcVG4hfR9H2SXEGEemXsPS42wC5b58g0k-YXpxRFN71viGfN7w6Nr-3cYUql48iZTgi19XC3',
+    'client_secret':'EHLaX9NW4HXfT3spXJBM_vB6E1R_mlq8yu9h9Vsezc5UDOnSOypmgbyCBn6EchJyCNQeGRdwU0Yub5Qo'
+})
 
 //get requests 
 app.get('/', function(req,res){
@@ -140,6 +145,112 @@ app.post('/DeleteCart/:id', function(req,res){
 });
 app.post('/ContactSend', EmailFromWeb);
 
+app.post('/CheckOut',function(req,res){
+    let itemList =[
+        //name: item,
+        //sku: item,
+        //price: 1.00,
+        //currency: USD,
+        //quantity: 1
+    ]
+    let item={
+        name: "item",
+        sku: "item",
+        price: 1.00,
+        currency: "USD",
+        quantity: 1
+    }
+    let Cart = req.cookies.Cart
+    
+    dbConn.query("SELECT * FROM Products", function(err,productList){
+        if(err){
+            res.send(err)
+        }else{
+            let total = 0
+            for(let loop = 0; loop < Cart.length; loop++){
+                item.name = productList.find(prod => prod.id == Cart[loop].id).ProductName
+                item.sku = String(productList.find(prod => prod.id == Cart[loop].id).id)
+                item.price = productList.find(prod => prod.id == Cart[loop].id).Cost
+                item.currency = "USD"
+                item.quantity = parseInt(Cart[loop].amount)
+                itemList.push(item)
+                total += (parseInt(productList.find(prod => prod.id == Cart[loop].id).Cost)*parseInt(Cart[loop].amount))
+            }
+            console.log(itemList)
+            console.log(total)
+
+            const item_list = JSON.stringify(itemList)
+            var create_payment_json = {
+                "intent": "sale",
+                "payer": {
+                    "payment_method": "paypal"
+                },
+                "redirect_urls": {
+                    "return_url": "http://localhost:3001/success",
+                    "cancel_url": "http://localhost:3001/CartPage"
+                },
+                "transactions": [{
+                    "item_list": {
+                        "items": [{
+                            "name": "item",
+                            "sku": "item",
+                            "price": "10.00",
+                            "currency": "USD",
+                            "quantity": 1
+                        }]
+                    },
+                    "amount": {
+                        "currency": "USD",
+                        "total": "10.00"
+                    },
+                    "description": "This is the payment description."
+                }]
+            };
+            console.log(create_payment_json)
+            
+            paypal.payment.create(create_payment_json, function (error, payment) {
+                if (error) {
+                    throw error;
+                } else {
+                    for(let loop = 0; loop < payment.links.length; loop++){
+                        if(payment.links[loop].rel == 'approval_url'){
+                            res.redirect(payment.links[loop].href)
+                        }
+                    }
+                }
+            });
+            
+
+        }
+    })
+    
+
+    
+})
+app.get('/success', (req, res) => {
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+    console.log(req)
+  
+    const execute_payment_json = {
+      "payer_id": payerId,
+      "transactions": [{
+        "amount": {
+          "currency": "USD",
+          "total": "10.00"
+        }
+      }]
+    }
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+      if (error) {
+        console.log(error.response);
+        throw error;
+      } else {
+        console.log(JSON.stringify(payment));
+        res.send('Success');
+      }
+    });
+  });
 
 app.listen(process.env.PORT || 3001, function () {//host site
     console.log("Port: 3000");
