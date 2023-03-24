@@ -207,7 +207,6 @@ app.post('/CheckOut',function(req,res){
                 }]
             };
             
-            
             paypal.payment.create(create_payment_json, function (error, payment) {
                 if (error) {
                     throw error;
@@ -220,20 +219,14 @@ app.post('/CheckOut',function(req,res){
                     }
                 }
             });
-            
-
         }
     })
-    
-
-    
 })
 app.get('/success', (req, res) => {
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
     let total = req.session.CartTotal
     
-  
     const execute_payment_json = {
       "payer_id": payerId,
       "transactions": [{
@@ -249,7 +242,7 @@ app.get('/success', (req, res) => {
         throw error;
       } else {
         res.cookie("Cart",[])
-        res.send('Success');
+        res.redirect('/');
       }
     });
   });
