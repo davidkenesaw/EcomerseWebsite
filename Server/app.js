@@ -109,6 +109,10 @@ app.get('/SignUpPage', function(req,res){
     const error = ""
     res.render("SignUp",{error});
 });
+app.get('/CheckOutPage', function(req,res){
+    let logged = ifLoggedHelper(req);
+    res.render("CheckOut",{logged});
+});
 app.get('/TwoStepAuthPage', function(req,res){
     const code = Math.floor(Math.random() * 1000) + 999;
     req.session.Code = code;
@@ -211,7 +215,7 @@ app.post('/CheckOut',function(req,res){
                 if (error) {
                     throw error;
                 } else {
-                    req.session.CartTotal = String(total)
+                    req.session.CartCheckOut.totalCost = String(total)
                     for(let loop = 0; loop < payment.links.length; loop++){
                         if(payment.links[loop].rel == 'approval_url'){
                             res.redirect(payment.links[loop].href)
