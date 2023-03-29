@@ -11,16 +11,20 @@
     <%- include('../Partials/MainNav.ejs') %>
 
     <nav class="">
-        <a class="" href="/StorePage/All">All</a>
+        <a class="">All</a>
         <% for (var i=0; i < catagory.length ; i++) { %>
             <div>
                 <form action="/DeleteCatagory/<%= catagory[i].Catagory %>" method="post">
-                    <a class="" href="/StorePage/<%=catagory[i].Catagory%>" ><%=catagory[i].Catagory%></a>
+                    <a class="" ><%=catagory[i].Catagory%></a>
                     <button type="submit">Delete</button> 
                 </form>
             </div>
             
         <% } %>
+        <form action="/AddCatagory" method="post">
+            <input type="text" name="Catagory" placeholder="New Catagory">
+            <button type="submit">Add</button>
+        </form>
     </nav>
 
 

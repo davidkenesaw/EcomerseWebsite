@@ -168,5 +168,18 @@ function DeleteCatagory(req,res){
 
     });
 }
+function AddCatagory(req,res){
+    let Catagory = req.body.Catagory
+    dbConn.query("INSERT INTO StoreCategory(Catagory) VALUES(?)",[Catagory],function(err,rows){
+        if(err){
+            //if an error occures
+            res.send(err)
+        }
+        else{
+            res.redirect('/EditStoreLayoutPage');
+        }
 
-module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory};
+    });
+}
+
+module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory, AddCatagory};
