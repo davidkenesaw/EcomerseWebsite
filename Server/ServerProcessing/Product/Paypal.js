@@ -99,6 +99,7 @@ function confirmPayment(req, res)  {
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
     let total = req.session.CartCheckOut.totalCost
+    let Cart = req.cookies.Cart;
     
     const execute_payment_json = {
       "payer_id": payerId,
@@ -114,6 +115,17 @@ function confirmPayment(req, res)  {
         console.log(error.response);
         throw error;
       } else {
+        
+        for(let loop = 0; loop < Cart.length; loop++){
+            dbConn.query("UPDATE Products SET Stock = Stock - ? WHERE id = ?",[Cart[loop].amount,Cart[loop].id],function(err){
+                if(err){
+                    console.log(err)
+                }else{
+                    console.log("stock updated for " + Cart[loop].id)
+                }
+            })
+        }
+
         Receipt("davidkennesaw@gmail.com",req.session.CartCheckOut)
         Receipt(req.session.CartCheckOut.Email,req.session.CartCheckOut)
         res.cookie("Cart",[])
