@@ -150,6 +150,11 @@ app.post('/DeleteCart/:id', function(req,res){
 app.post('/ContactSend', EmailFromWeb);
 
 app.post('/CheckOut',function(req,res){
+    let Address = req.body.Address;
+    let Zip = req.body.ZipCode;
+    let City = req.body.City;
+    let State = req.body.State;
+    
     let itemList =[
         //name: item,
         //sku: item,
@@ -216,7 +221,11 @@ app.post('/CheckOut',function(req,res){
                     throw error;
                 } else {
                     req.session.CartCheckOut = {
-                        totalCost:String(total)
+                        totalCost:String(total),
+                        Zip:Zip,
+                        state:State,
+                        city:City,
+                        address:Address
                     }
                     for(let loop = 0; loop < payment.links.length; loop++){
                         if(payment.links[loop].rel == 'approval_url'){
