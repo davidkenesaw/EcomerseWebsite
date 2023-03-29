@@ -40,4 +40,22 @@ function EmailFromWeb(req, res) {
     res.redirect('/ContactPage')
 
 }
-module.exports = {sendEmail, EmailFromWeb};
+function Receipt(email,ProductObj) {
+    
+    //function that sends email of code to user
+    const msg = {
+        to: email,
+        from: process.env.EMAIL,
+        subject: 'Product receipt',
+        text: "delivered to: " + ProductObj.address + " " + ProductObj.city + " " + ProductObj.state + " " + ProductObj.Zip + "\n"+
+        "Products: " + JSON.stringify(ProductObj.products)
+
+    }
+    sgMail.send(msg).then(() => {
+        console.log('Email sent')
+    })
+    .catch((error) => {
+        console.error(error)
+    })
+}
+module.exports = {sendEmail, EmailFromWeb, Receipt};

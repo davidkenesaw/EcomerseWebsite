@@ -10,7 +10,7 @@ const paypal = require('paypal-rest-sdk')
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
 const {addProduct,StoreDisplay, ProductPage,AddToCart} = require('./ServerProcessing/Product/ProductFunct')
-const {sendEmail, EmailFromWeb} = require('./Email/email')
+const {sendEmail, EmailFromWeb, Receipt} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 
 //configre express app
@@ -154,6 +154,7 @@ app.post('/CheckOut',function(req,res){
     let Zip = req.body.ZipCode;
     let City = req.body.City;
     let State = req.body.State;
+    let Email = req.body.Email;
     
     let itemList =[
         //name: item,
@@ -162,13 +163,6 @@ app.post('/CheckOut',function(req,res){
         //currency: USD,
         //quantity: 1
     ]
-    let item={
-        name: "item",
-        sku: "item",
-        price: 1.00,
-        currency: "USD",
-        quantity: 1
-    }
     let Cart = req.cookies.Cart
 
     dbConn.query("SELECT * FROM Products", function(err,productList){
@@ -177,18 +171,20 @@ app.post('/CheckOut',function(req,res){
         }else{
             let total = 0
             for(let loop = 0; loop < Cart.length; loop++){
-                item.name = productList.find(prod => prod.id == Cart[loop].id).ProductName
-                item.sku = String(productList.find(prod => prod.id == Cart[loop].id).id)
-                item.price = productList.find(prod => prod.id == Cart[loop].id).Cost
-                item.currency = "USD"
-                item.quantity = parseInt(Cart[loop].amount)
-                itemList.push(item)
+                itemList.push({
+                    name: productList.find(prod => prod.id == Cart[loop].id).ProductName,
+                    sku: String(productList.find(prod => prod.id == Cart[loop].id).id),
+                    price: productList.find(prod => prod.id == Cart[loop].id).Cost,
+                    currency: "USD",
+                    quantity: parseInt(Cart[loop].amount)
+                })
                 total += (parseInt(productList.find(prod => prod.id == Cart[loop].id).Cost)*parseInt(Cart[loop].amount))
+                console.log("item: " + item.name)
             }
             
             console.log(total)
+            
 
-            const item_list = JSON.stringify(itemList)
             var create_payment_json = {
                 "intent": "sale",
                 "payer": {
@@ -225,7 +221,9 @@ app.post('/CheckOut',function(req,res){
                         Zip:Zip,
                         state:State,
                         city:City,
-                        address:Address
+                        address:Address,
+                        Email:Email,
+                        products: itemList
                     }
                     for(let loop = 0; loop < payment.links.length; loop++){
                         if(payment.links[loop].rel == 'approval_url'){
@@ -256,6 +254,8 @@ app.get('/success', (req, res) => {
         console.log(error.response);
         throw error;
       } else {
+        Receipt("davidkennesaw@gmail.com",req.session.CartCheckOut)
+        Receipt(req.session.CartCheckOut.Email,req.session.CartCheckOut)
         res.cookie("Cart",[])
         res.redirect('/');
       }
