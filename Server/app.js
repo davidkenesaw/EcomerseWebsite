@@ -165,7 +165,7 @@ app.post('/CheckOut',function(req,res){
         quantity: 1
     }
     let Cart = req.cookies.Cart
-    
+
     dbConn.query("SELECT * FROM Products", function(err,productList){
         if(err){
             res.send(err)
@@ -215,7 +215,9 @@ app.post('/CheckOut',function(req,res){
                 if (error) {
                     throw error;
                 } else {
-                    req.session.CartCheckOut.totalCost = String(total)
+                    req.session.CartCheckOut = {
+                        totalCost:String(total)
+                    }
                     for(let loop = 0; loop < payment.links.length; loop++){
                         if(payment.links[loop].rel == 'approval_url'){
                             res.redirect(payment.links[loop].href)
@@ -229,8 +231,8 @@ app.post('/CheckOut',function(req,res){
 app.get('/success', (req, res) => {
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
-    let total = req.session.CartTotal
-    
+    let total1 = req.session.CartCheckOut
+    let total = total1.totalCost
     const execute_payment_json = {
       "payer_id": payerId,
       "transactions": [{
