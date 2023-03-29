@@ -231,8 +231,8 @@ app.post('/CheckOut',function(req,res){
 app.get('/success', (req, res) => {
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
-    let total1 = req.session.CartCheckOut
-    let total = total1.totalCost
+    let total = req.session.CartCheckOut.totalCost
+    
     const execute_payment_json = {
       "payer_id": payerId,
       "transactions": [{
