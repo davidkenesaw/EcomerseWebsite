@@ -8,7 +8,7 @@ const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
-const {addProduct,StoreDisplay, ProductPage,AddToCart} = require('./ServerProcessing/Product/ProductFunct')
+const {addProduct,StoreDisplay, ProductPage,AddToCart, EditLayout, DeleteCatagory} = require('./ServerProcessing/Product/ProductFunct')
 const {sendEmail, EmailFromWeb, Receipt} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 const {confirmPayment, createPayment} = require('./ServerProcessing/Product/Paypal')
@@ -47,14 +47,10 @@ app.get("/AddProductPage",function(req,res){
 })
 app.get("/EditProductPage",function(req,res){
     let logged = ifLoggedHelper(req);
-    const user = req.session
+    
     res.render("EditProduct",{logged,user});
 })
-app.get("/EditStoreLayoutPage",function(req,res){
-    let logged = ifLoggedHelper(req);
-    const user = req.session
-    res.render("EditStoreLayout",{logged,user});
-})
+app.get("/EditStoreLayoutPage",EditLayout)
 app.get('/StorePage/:Category', StoreDisplay);
 app.get('/StorePage/Product/:id',ProductPage)
 app.get('/CartPage', function(req,res){
@@ -144,7 +140,10 @@ app.post('/DeleteCart/:id', function(req,res){
     res.redirect("/CartPage")
 });
 app.post('/ContactSend', EmailFromWeb);
+app.post('/DeleteCatagory/:id', DeleteCatagory)
 
+
+//paypal
 app.post('/CheckOut',createPayment)
 app.get('/success', confirmPayment);
 

@@ -140,4 +140,33 @@ function AddToCart(req,res){
     res.redirect("/CartPage")
 
 }
-module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart};
+//Display EditLayoutPage
+function EditLayout(req,res){
+    let logged = ifLoggedHelper(req);
+    dbConn.query("SELECT * FROM StoreCategory",function(err,rows){
+    catagory = rows;
+        if(err){
+            //if an error occures
+            res.send(err)
+        }
+        else{
+            res.render('EditStoreLayout',{logged,catagory});
+        }
+
+    });
+}
+function DeleteCatagory(req,res){
+    let id = req.params.id;
+    dbConn.query("DELETE FROM StoreCategory WHERE Catagory = ?",[id],function(err,rows){
+        if(err){
+            //if an error occures
+            res.send(err)
+        }
+        else{
+            res.redirect('/EditStoreLayoutPage');
+        }
+
+    });
+}
+
+module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory};
