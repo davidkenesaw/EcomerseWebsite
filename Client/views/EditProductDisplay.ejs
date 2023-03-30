@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../Partials/BootStrap.ejs') %>
+</head>
+<body>
+    <%- include('../Partials/MainNav.ejs') %>
+
+
+    <div class="container">
+        <div class="row justify-content-md">
+            
+    <% for (var i=0; i < newListItems.length ; i++) { %>
+        <div class="col-md-auto">
+        
+            <form action="/EditProduct/<%=newListItems[i].id%>"method="get">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="<%= newListItems[i].Pic %>" width="286" height="180" >
+                    <div class="card-body">
+                        <h5 class="card-title"><%= newListItems[i].ProductName %></h5>
+                        <p class="card-text"><%= newListItems[i].Description %></p>
+                        <p class="card-text"><%= newListItems[i].Cost %></p>
+                        <form action="">
+                            <button class="btn btn-dark" type="submit">Edit</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    <% } %>
+        
+</div>
+</div>
+
+    <%- include('../Partials/Footer.ejs') %>
+</body>
+</html>

@@ -8,7 +8,7 @@ const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
-const {addProduct,StoreDisplay, ProductPage,AddToCart, EditLayout, DeleteCatagory, AddCatagory} = require('./ServerProcessing/Product/ProductFunct')
+const {addProduct,StoreDisplay, ProductPage,AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock} = require('./ServerProcessing/Product/ProductFunct')
 const {sendEmail, EmailFromWeb, Receipt} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 const {confirmPayment, createPayment} = require('./ServerProcessing/Product/Paypal')
@@ -41,18 +41,15 @@ app.get("/AccountPage",function(req,res){
 })
 app.get("/AddProductPage",function(req,res){
     let logged = ifLoggedHelper(req);
-    const user = req.session
-    const error = "";
-    res.render("AddProduct",{logged,user,error});
-})
-app.get("/EditProductPage",function(req,res){
-    let logged = ifLoggedHelper(req);
     
-    res.render("EditProduct",{logged,user});
+    const error = "";
+    res.render("AddProduct",{logged,error});
 })
+app.get("/EditProductPage",EditProductDisplay)
 app.get("/EditStoreLayoutPage",EditLayout)
 app.get('/StorePage/:Category', StoreDisplay);
 app.get('/StorePage/Product/:id',ProductPage)
+app.get('/EditProduct/:id',EditProductPage)
 app.get('/CartPage', function(req,res){
     
     if(req.cookies.Cart == null){
@@ -142,6 +139,11 @@ app.post('/DeleteCart/:id', function(req,res){
 app.post('/ContactSend', EmailFromWeb);
 app.post('/DeleteCatagory/:id', DeleteCatagory)
 app.post('/AddCatagory', AddCatagory)
+app.post('/EditName/:id', EditName)
+app.post('/EditCatagory/:id', EditCatagory)
+app.post('/EditDescription/:id', EditDescription)
+app.post('/EditCost/:id', EditCost)
+app.post('/EditStock/:id', EditStock)
 
 //paypal
 app.post('/CheckOut',createPayment)

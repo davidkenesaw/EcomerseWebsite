@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../Partials/BootStrap.ejs') %>
+</head>
+<body>
+
+    <%- include('../Partials/MainNav.ejs') %>
+
+    <h1>Edit <%= product[0].ProductName %></h1>
+    <form action="/EditName/<%= product[0].id %>" method="post">
+        <p><%= product[0].ProductName %></p>
+        <input type="text" name="Name" placeholder="Product name">
+        <button type="submit">Edit</button>
+        <br/> 
+    </form>
+    <form action="/EditCatagory/<%= product[0].id %>" method="post">
+        <p><%= product[0].Category %></p>
+        <input type="text" name="Catagory" placeholder="Catagory">
+        <button type="submit">Edit</button>
+        <br/> 
+    </form>
+    <form action="/EditDescription/<%= product[0].id %>" method="post">
+        <p><%= product[0].Description %></p>
+        <input type="text" name="Description" placeholder="Description">
+        <button type="submit">Edit</button>
+        <br/> 
+    </form>
+    <form action="/EditCost/<%= product[0].id %>" method="post">
+        <p><%= product[0].Cost %></p>
+        <input type="text" name="Cost" placeholder="Cost">
+        <button type="submit">Edit</button>
+        <br/> 
+    </form>
+    <form action="/EditStock/<%= product[0].id %>" method="post">
+        <p><%= product[0].Stock %></p>
+        <input type="text" name="Stock" placeholder="Stock">
+        <button type="submit">Edit</button>
+        <br/> 
+    </form>
+
+    
+
+    <%- include('../Partials/Footer.ejs') %>
+</body>
+</html>
