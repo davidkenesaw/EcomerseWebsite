@@ -8,7 +8,7 @@ const upload = require("express-fileupload")
 const cookieParser = require('cookie-parser');
 const { seshOption } = require('../Config/db.config')
 const {SignUp, Login, Authenticate, ifLoggedHelper} = require('./ServerProcessing/LoginRegister')
-const {addProduct,StoreDisplay, ProductPage,AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock, EditPic} = require('./ServerProcessing/Product/ProductFunct')
+const {addProduct,StoreDisplay, ProductPage,AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock, EditPic, DeleteProduct} = require('./ServerProcessing/Product/ProductFunct')
 const {sendEmail, EmailFromWeb, Receipt} = require('./Email/email')
 const {dbConn} = require('../Config/db.config');
 const {confirmPayment, createPayment} = require('./ServerProcessing/Product/Paypal')
@@ -145,6 +145,7 @@ app.post('/EditDescription/:id', EditDescription)
 app.post('/EditCost/:id', EditCost)
 app.post('/EditStock/:id', EditStock)
 app.post('/EditPic/:id', EditPic)
+app.post('/DeleteProduct/:id', DeleteProduct)
 
 //paypal
 app.post('/CheckOut',createPayment)

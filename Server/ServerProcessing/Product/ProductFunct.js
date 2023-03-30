@@ -1,5 +1,6 @@
 const {dbConn} = require('../../../Config/db.config');
 const {ifLoggedHelper} = require('../LoginRegister')
+const fs = require('fs');
 //test proj
 
 function addProduct(req, res) {
@@ -279,18 +280,26 @@ function EditPic(req,res){
             res.redirect("/EditProduct/" + id)
         }
     }); 
-
     
-
-
-
-    
-
-
-
-
-
-       
+}
+function DeleteProduct(req,res){
+    let id = req.params.id
+    const path = "../Client/img/"
+    let FileName = id + ".jpg";
+    dbConn.query("DELETE FROM Products WHERE id = ?", [id], function(err){
+        if(err){
+            res.send(err)
+        }else{
+            fs.unlink(path + FileName, (err) => {
+                if (err) {
+                    throw err;
+                }
+            
+                console.log("Delete File successfully.");
+            });
+            res.redirect('/EditProductPage');
+        }
+    })
 }
 
-module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock, EditPic};
+module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock, EditPic, DeleteProduct};
