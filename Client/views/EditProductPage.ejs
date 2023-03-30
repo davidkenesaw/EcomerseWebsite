@@ -42,6 +42,11 @@
         <button type="submit">Edit</button>
         <br/> 
     </form>
+    <form action="/EditPic/<%= product[0].id %>" method="post" enctype="multipart/form-data">
+        
+        <input type="file" name="ProductPic" />
+		<input type='submit' value='Upload!' />
+    </form>
 
     
 

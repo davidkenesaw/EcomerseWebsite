@@ -266,5 +266,36 @@ function EditStock(req,res){
         }
     })
 }
+function EditPic(req,res){
+    let id = req.params.id
+    dbConn.query("SELECT ProductName FROM Products WHERE id = ?", [id], function(err, ProductName){
+        if(err){
+            res.send(err)
+        }else{
+            let name = ProductName[0].ProductName
+            let FileName = name.replace(/\s/g, '') + id + ".jpg";
+            const path = "../Client/img/"+ FileName
 
-module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock};
+            req.files.ProductPic.mv(path, function(error){
+                if(error){
+                    res.send(error)           
+                }else{
+                    res.redirect("/EditProduct/" + id)
+                }
+            }); 
+
+        }
+    })
+
+
+
+    
+
+
+
+
+
+       
+}
+
+module.exports = {addProduct, StoreDisplay, ProductPage, AddToCart, EditLayout, DeleteCatagory, AddCatagory, EditProductDisplay,EditProductPage, EditName, EditCatagory, EditDescription, EditCost, EditStock, EditPic};
