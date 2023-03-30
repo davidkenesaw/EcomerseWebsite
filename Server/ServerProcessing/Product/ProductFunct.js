@@ -29,8 +29,8 @@ function addProduct(req, res) {
                 if(err){
                     res.send(err)
                 }else{
-                    Pic ="../img/" + ProductName.replace(/\s/g, '') + id[0].id + ".jpg";
-                    const path = "../Client/img/"+ ProductName.replace(/\s/g, '') + id[0].id+".jpg"
+                    Pic ="../img/" + id[0].id + ".jpg";
+                    const path = "../Client/img/" + id[0].id+".jpg"
                     console.log(path)
                     dbConn.query("UPDATE Products SET Pic = ? WHERE id = ?", [Pic,id[0].id], function (err) {
                         
@@ -268,24 +268,19 @@ function EditStock(req,res){
 }
 function EditPic(req,res){
     let id = req.params.id
-    dbConn.query("SELECT ProductName FROM Products WHERE id = ?", [id], function(err, ProductName){
-        if(err){
-            res.send(err)
+    
+    let FileName = id + ".jpg";
+    const path = "../Client/img/"+ FileName
+
+    req.files.ProductPic.mv(path, function(error){
+        if(error){
+            res.send(error)           
         }else{
-            let name = ProductName[0].ProductName
-            let FileName = name.replace(/\s/g, '') + id + ".jpg";
-            const path = "../Client/img/"+ FileName
-
-            req.files.ProductPic.mv(path, function(error){
-                if(error){
-                    res.send(error)           
-                }else{
-                    res.redirect("/EditProduct/" + id)
-                }
-            }); 
-
+            res.redirect("/EditProduct/" + id)
         }
-    })
+    }); 
+
+    
 
 
 
