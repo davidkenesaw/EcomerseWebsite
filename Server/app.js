@@ -39,6 +39,11 @@ app.get("/AccountPage",function(req,res){
     const user = req.session
     res.render("Account",{logged,user});
 })
+app.get("/OrdersPage",function(req,res){
+    let logged = ifLoggedHelper(req);
+    
+    res.render("Orders",{logged});
+})
 app.get("/AddProductPage",function(req,res){
     let logged = ifLoggedHelper(req);
     
