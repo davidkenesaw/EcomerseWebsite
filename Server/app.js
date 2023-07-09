@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, '../Partials')));
 app.use(seshOption)//configuration for express session
 app.use(upload())
 
+//this is a new change
 
 //get requests 
 app.get('/', function(req,res){
