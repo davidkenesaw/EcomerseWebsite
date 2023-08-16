@@ -57,7 +57,7 @@ app.get('/StorePage/:Category', StoreDisplay);
 app.get('/StorePage/Product/:id',ProductPage)
 app.get('/EditProduct/:id',EditProductPage)
 app.get('/CartPage', function(req,res){
-    //branch change
+    
     if(req.cookies.Cart == null){
         res.cookie("Cart",[])
         return res.redirect("/CartPage")
